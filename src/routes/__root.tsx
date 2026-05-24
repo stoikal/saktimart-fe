@@ -5,7 +5,7 @@ const RootLayout = () => (
   <>
     <div className="flex gap-2 p-2">
       <Link to="/" className="[&.active]:font-bold">
-        Home
+        Beranda
       </Link>
       <Link to="/master/products" className="[&.active]:font-bold">
         Master Produk
