@@ -7,11 +7,11 @@ const RootLayout = () => (
       <Link to="/" className="[&.active]:font-bold">
         Beranda
       </Link>
-      <Link to="/master/products" className="[&.active]:font-bold">
-        Master Produk
+      <Link to="/products" className="[&.active]:font-bold">
+        Produk
       </Link>
-      <Link to="/master/product-categories" className="[&.active]:font-bold">
-        Master Kategori Produk
+      <Link to="/product-categories" className="[&.active]:font-bold">
+       Kategori Produk
       </Link>
     </div>
     <hr />

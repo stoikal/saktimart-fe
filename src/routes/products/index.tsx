@@ -6,45 +6,53 @@ import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/table-core"
 import { useState } from "react"
 
-export const Route = createFileRoute("/master/product-categories/")({
+export const Route = createFileRoute("/products/")({
   component: RouteComponent,
 })
 
-type ProductCategory = {
-  idProductCategory: string
+type Product = {
+  sku: string
   name?: string
   description?: string
+  barcode?: string
 }
 
 function RouteComponent() {
   const [page, setPage] = useState(1)
   const pageSize = 2
 
-  const { data: productCategories } = useQuery({
-    queryKey: ["product-categories", { page, pageSize }],
+  const { data: products } = useQuery({
+    queryKey: ["products", { page, pageSize }],
     queryFn: async () => {
       const query = new URLSearchParams({
         page: String(page),
         size: String(pageSize),
       })
       const response = await fetch(
-        `${env.API_BASE_URL}/api/master/product-categories?${query.toString()}`
+        `${env.API_BASE_URL}/api/products?${query.toString()}`
       )
       return response.json()
     },
   })
 
-  const data: ProductCategory[]= productCategories?.data?.elements || []
-  const totalPages = productCategories?.data?.totalPages || 1
+  const data: Product[] = products?.data?.elements || []
+  const totalElements = products?.data?.totalElements || 0
+  const totalPages = Math.ceil(totalElements / pageSize) || 1
 
-  const columns: ColumnDef<ProductCategory>[] = [
-    { header: "Nama", accessorKey: "name" },
-    { header: "Deskripsi", accessorKey: "description" },
-    { header: "Aksi", cell: () => null}
+  const columns: ColumnDef<Product>[] = [
+    { header: "SKU", accessorKey: "sku" },
+    { header: "Name", accessorKey: "name" },
+    { header: "Description", accessorKey: "description" },
+    { header: "Barcode", accessorKey: "barcode" },
+    {
+      id: "aksi",
+      header: "Aksi",
+      cell: () => null,
+    },
   ]
 
   return (
-    <div>
+    <div className="p-4">
       <DataTable columns={columns} data={data} />
 
       <DataPagination
