@@ -6,6 +6,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/table-core"
 import { useState } from "react"
 import CreateProductDialog from "./-components/CreateProductCategoryDialog"
+import DeleteProductCategoryDialog from "./-components/DeleteProductCategoryDialog"
 
 export const Route = createFileRoute("/product-categories/")({
   component: RouteComponent,
@@ -41,7 +42,9 @@ function RouteComponent() {
   const columns: ColumnDef<ProductCategory>[] = [
     { header: "Nama", accessorKey: "name" },
     { header: "Deskripsi", accessorKey: "description" },
-    { header: "Aksi", cell: () => null}
+    { header: "Aksi", cell: ({ cell }) => (
+      <DeleteProductCategoryDialog productCategory={cell.row.original}/>
+    )}
   ]
 
   return (

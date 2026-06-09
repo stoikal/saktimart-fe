@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -38,6 +39,7 @@ const FormSchema = v.object({
 
 export default function CreateProductCategoryDialog() {
   const queryClient = useQueryClient()
+  const [open, setOpen] = useState(false)
 
   const form = useForm({
     schema: FormSchema,
@@ -48,7 +50,7 @@ export default function CreateProductCategoryDialog() {
   })
 
   const ProductCategoryMutation = useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: Parameters<SubmitHandler<typeof FormSchema>>[0]) => {
       const response = await fetch(
         env.API_BASE_URL + "/api/product-categories",
         {
@@ -69,6 +71,10 @@ export default function CreateProductCategoryDialog() {
       queryClient.invalidateQueries({ queryKey: ["product-categories"] })
       console.log(values)
     },
+    onSuccess: () => {
+      reset(form)
+      setOpen(false)
+    },
   })
 
   const handleSubmit: SubmitHandler<typeof FormSchema> = (values) => {
@@ -76,7 +82,7 @@ export default function CreateProductCategoryDialog() {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Tambah</Button>
       </DialogTrigger>
