@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/table-core"
 import { useState } from "react"
+import CreateProductDialog from "./-components/CreateProductCategoryDialog"
 
 export const Route = createFileRoute("/product-categories/")({
   component: RouteComponent,
@@ -18,7 +19,7 @@ type ProductCategory = {
 
 function RouteComponent() {
   const [page, setPage] = useState(1)
-  const pageSize = 2
+  const pageSize = 10
 
   const { data: productCategories } = useQuery({
     queryKey: ["product-categories", { page, pageSize }],
@@ -44,7 +45,10 @@ function RouteComponent() {
   ]
 
   return (
-    <div>
+    <div className="p-4">
+      <div className="flex justify-end mb-4">
+        <CreateProductDialog />
+      </div>
       <DataTable columns={columns} data={data} />
 
       <DataPagination
