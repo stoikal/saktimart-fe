@@ -6,12 +6,14 @@ import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/table-core"
 import { useState } from "react"
 import CreateProductDialog from "./-components/CreateProductDialog"
+import DeleteProductDialog from "./-components/DeleteProductDialog"
 
 export const Route = createFileRoute("/products/")({
   component: RouteComponent,
 })
 
 type Product = {
+  idProduct: string
   sku: string
   name?: string
   description?: string
@@ -48,7 +50,9 @@ function RouteComponent() {
     {
       id: "aksi",
       header: "Aksi",
-      cell: () => null,
+      cell: ({ cell }) => (
+        <DeleteProductDialog product={cell.row.original} />
+      ),
     },
   ]
 

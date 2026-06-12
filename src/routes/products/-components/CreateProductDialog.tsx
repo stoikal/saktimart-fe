@@ -38,7 +38,8 @@ import {
 } from "@formisch/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import * as v from "valibot"
-import { X } from "lucide-react"
+import { X, Plus } from "lucide-react"
+import { toast } from "sonner"
 
 const FormSchema = v.object({
   sku: v.pipe(
@@ -94,17 +95,16 @@ export default function CreateProductDialog() {
   })
 
   const productMutation = useMutation({
-    mutationFn: async (values: Parameters<SubmitHandler<typeof FormSchema>>[0]) => {
-      const response = await fetch(
-        env.API_BASE_URL + "/api/products",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      )
+    mutationFn: async (
+      values: Parameters<SubmitHandler<typeof FormSchema>>[0]
+    ) => {
+      const response = await fetch(env.API_BASE_URL + "/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      })
 
       const data = await response.json()
 
@@ -119,6 +119,9 @@ export default function CreateProductDialog() {
       setSelectedCategoryId("")
       setOpen(false)
     },
+    onError: (error) => {
+      toast.error(error.message)
+    },
   })
 
   const handleSubmit: SubmitHandler<typeof FormSchema> = (values) => {
@@ -128,7 +131,9 @@ export default function CreateProductDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Tambah</Button>
+        <Button>
+          <Plus /> Tambah
+        </Button>
       </DialogTrigger>
 
       <DialogContent
@@ -147,10 +152,10 @@ export default function CreateProductDialog() {
           className="flex flex-col gap-4"
         >
           <FieldGroup>
-            <FormischField of={form} path={["sku"]}>
+            <FormischField of={form} path={["barcode"]}>
               {(field) => (
-                <Field data-invalid={field.errors !== null}>
-                  <FieldLabel>SKU</FieldLabel>
+                <Field>
+                  <FieldLabel>Barcode</FieldLabel>
                   <Input
                     {...field.props}
                     value={field.input ?? ""}
@@ -207,10 +212,10 @@ export default function CreateProductDialog() {
           </FieldGroup>
 
           <FieldGroup>
-            <FormischField of={form} path={["barcode"]}>
+            <FormischField of={form} path={["sku"]}>
               {(field) => (
-                <Field>
-                  <FieldLabel>Barcode</FieldLabel>
+                <Field data-invalid={field.errors !== null}>
+                  <FieldLabel>SKU</FieldLabel>
                   <Input
                     {...field.props}
                     value={field.input ?? ""}
@@ -241,35 +246,47 @@ export default function CreateProductDialog() {
                   <SelectValue placeholder="Pilih kategori" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.filter((cat) => {
-                    const selected = getInput(form, { path: ["categories"] }) as string[] | undefined
-                    return !selected?.includes(cat.idProductCategory)
-                  }).map((category) => (
-                    <SelectItem
-                      key={category.idProductCategory}
-                      value={category.idProductCategory}
-                    >
-                      {category.name}
-                    </SelectItem>
-                  ))}
+                  {categories
+                    .filter((cat) => {
+                      const selected = getInput(form, {
+                        path: ["categories"],
+                      }) as string[] | undefined
+                      return !selected?.includes(cat.idProductCategory)
+                    })
+                    .map((category) => (
+                      <SelectItem
+                        key={category.idProductCategory}
+                        value={category.idProductCategory}
+                      >
+                        {category.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </Field>
             <FieldArray of={form} path={["categories"]}>
               {(fieldArray) => (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {fieldArray.items.map((itemId, index) => {
-                    const categoryId = (getInput(form, { path: ["categories"] }) as string[] | undefined)?.[index]
-                    const category = categories.find((c) => c.idProductCategory === categoryId)
+                    const categoryId = (
+                      getInput(form, { path: ["categories"] }) as
+                        | string[]
+                        | undefined
+                    )?.[index]
+                    const category = categories.find(
+                      (c) => c.idProductCategory === categoryId
+                    )
                     return (
                       <span
                         key={itemId}
-                        className="inline-flex items-center gap-1 px-2 py-1 text-sm bg-secondary rounded"
+                        className="inline-flex items-center gap-1 rounded bg-secondary px-2 py-1 text-sm"
                       >
                         {category?.name ?? categoryId}
                         <button
                           type="button"
-                          onClick={() => remove(form, { path: ["categories"], at: index })}
+                          onClick={() =>
+                            remove(form, { path: ["categories"], at: index })
+                          }
                           className="hover:text-destructive"
                         >
                           <X className="size-3" />

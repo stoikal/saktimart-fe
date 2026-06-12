@@ -27,6 +27,7 @@ import {
 } from "@formisch/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import * as v from "valibot"
+import { Plus } from "lucide-react"
 
 const FormSchema = v.object({
   name: v.pipe(
@@ -50,7 +51,9 @@ export default function CreateProductCategoryDialog() {
   })
 
   const ProductCategoryMutation = useMutation({
-    mutationFn: async (values: Parameters<SubmitHandler<typeof FormSchema>>[0]) => {
+    mutationFn: async (
+      values: Parameters<SubmitHandler<typeof FormSchema>>[0]
+    ) => {
       const response = await fetch(
         env.API_BASE_URL + "/api/product-categories",
         {
@@ -84,7 +87,9 @@ export default function CreateProductCategoryDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Tambah</Button>
+        <Button>
+          <Plus /> Tambah
+        </Button>
       </DialogTrigger>
 
       <DialogContent

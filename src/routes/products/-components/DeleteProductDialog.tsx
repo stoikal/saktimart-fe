@@ -14,26 +14,26 @@ import { Trash } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 
-type ProductCategory = {
-  idProductCategory: string
+type Product = {
+  idProduct: string
   name?: string
   description?: string
 }
 
-type DeleteProductCategoryDialogProps = {
-  productCategory: ProductCategory
+type DeleteProductDialogProps = {
+  product: Product
 }
 
-export default function DeleteProductCategoryDialog(
-  props: DeleteProductCategoryDialogProps
+export default function DeleteProductDialog(
+  props: DeleteProductDialogProps
 ) {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
-  const ProductCategoryMutation = useMutation({
-    mutationFn: async (idProductCategory: string) => {
+  const deleteProductMutation = useMutation({
+    mutationFn: async (idProduct: string) => {
       const response = await fetch(
-        env.API_BASE_URL + "/api/product-categories/" + idProductCategory,
+        env.API_BASE_URL + "/api/products/" + idProduct,
         {
           method: "DELETE",
           headers: {
@@ -48,17 +48,17 @@ export default function DeleteProductCategoryDialog(
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["product-categories"] })
+      queryClient.invalidateQueries({ queryKey: ["products"] })
       setOpen(false)
-      toast.success("Berhasil menghapus kategori produk.")
+      toast.success("Berhasil menghapus produk.")
     },
     onError: () => {
-      toast.error("Gagal menghapus kategori produk.")
+      toast.error("Gagal menghapus produk.")
     },
   })
 
   const handleDelete = () => {
-    ProductCategoryMutation.mutate(props.productCategory.idProductCategory)
+    deleteProductMutation.mutate(props.product.idProduct)
   }
 
   return (
@@ -75,16 +75,16 @@ export default function DeleteProductCategoryDialog(
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Hapus Kategori Produk</DialogTitle>
+          <DialogTitle>Hapus Produk</DialogTitle>
         </DialogHeader>
 
-        <p>Hapus "{props.productCategory.name}"?</p>
+        <p>Hapus "{props.product.name}"?</p>
 
         <DialogFooter>
           <DialogClose asChild>
             <Button
               variant="secondary"
-              disabled={ProductCategoryMutation.isPending}
+              disabled={deleteProductMutation.isPending}
             >
               Batal
             </Button>
@@ -93,7 +93,7 @@ export default function DeleteProductCategoryDialog(
           <Button
             variant="destructive"
             type="submit"
-            disabled={ProductCategoryMutation.isPending}
+            disabled={deleteProductMutation.isPending}
             onClick={handleDelete}
           >
             Hapus
