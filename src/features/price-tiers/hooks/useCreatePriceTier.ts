@@ -29,7 +29,7 @@ export function useCreatePriceTier() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: priceTierQueries.lists(),
+        queryKey: priceTierQueries.all(),
       })
     },
   })

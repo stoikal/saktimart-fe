@@ -3,27 +3,14 @@ import { queryOptions } from "@tanstack/react-query"
 
 export const priceTierQueries = {
   all: () => ["price-tiers"] as const,
-  lists: () => [...priceTierQueries.all(), "list"] as const,
-  list: (param: ListPriceTierParam) =>
+  list: () =>
     queryOptions({
-      queryKey: [...priceTierQueries.lists(), param],
+      queryKey: [...priceTierQueries.all(), "list"],
       queryFn: async () => {
-        const query = new URLSearchParams({
-          page: String(param.page),
-          size: String(param.pageSize),
-        })
-
-        const res = await fetch(
-          `${env.API_BASE_URL}/api/price-tiers?${query.toString()}`
-        )
+        const res = await fetch(`${env.API_BASE_URL}/api/price-tiers`)
 
         return await res.json()
       },
       staleTime: 1000 * 30,
     }),
-}
-
-export type ListPriceTierParam = {
-  page: number
-  pageSize: number
 }

@@ -25,7 +25,7 @@ export function useDeletePriceTier() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: priceTierQueries.lists(),
+        queryKey: priceTierQueries.all(),
       })
     },
   })
