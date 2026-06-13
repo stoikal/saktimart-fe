@@ -86,6 +86,7 @@ export default function CreateProductDialog() {
         reset(form)
         setSelectedCategoryId("")
         setOpen(false)
+        toast.success("Berhasil menambahkan produk.")
       },
       onError: (error) => {
         toast.error(error.message)

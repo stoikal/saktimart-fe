@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { env } from "@/lib/env"
 import {
   Form,
   Field as FormischField,
@@ -25,63 +24,38 @@ import {
   useForm,
   type SubmitHandler,
 } from "@formisch/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import * as v from "valibot"
 import { Plus } from "lucide-react"
-
-const FormSchema = v.object({
-  name: v.pipe(
-    v.string(),
-    v.minLength(3, "Minimal 3 karakter"),
-    v.maxLength(100, "Maksimal 100 karakter")
-  ),
-  description: v.pipe(v.string()),
-})
+import { toast } from "sonner"
+import { CreateProductCategorySChema } from "@/features/product-categories/schemas"
+import { useCreateProductCategory } from "@/features/product-categories/hooks/useCreateProductCategory"
 
 export default function CreateProductCategoryDialog() {
-  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
   const form = useForm({
-    schema: FormSchema,
+    schema: CreateProductCategorySChema,
     initialInput: {
       name: "",
       description: "",
     },
   })
 
-  const ProductCategoryMutation = useMutation({
-    mutationFn: async (
-      values: Parameters<SubmitHandler<typeof FormSchema>>[0]
-    ) => {
-      const response = await fetch(
-        env.API_BASE_URL + "/api/product-categories",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      )
+  const { mutate: createProductCategory, isPending: isCreating } =
+    useCreateProductCategory()
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message)
-      }
-
-      queryClient.invalidateQueries({ queryKey: ["product-categories"] })
-      console.log(values)
-    },
-    onSuccess: () => {
-      reset(form)
-      setOpen(false)
-    },
-  })
-
-  const handleSubmit: SubmitHandler<typeof FormSchema> = (values) => {
-    ProductCategoryMutation.mutate(values)
+  const handleSubmit: SubmitHandler<typeof CreateProductCategorySChema> = (
+    values
+  ) => {
+    createProductCategory(values, {
+      onSuccess: () => {
+        reset(form)
+        setOpen(false)
+        toast.success("Berhasil menambahkan kategori produk.")
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
   }
 
   return (
@@ -152,18 +126,14 @@ export default function CreateProductCategoryDialog() {
           <DialogClose asChild>
             <Button
               variant="secondary"
-              disabled={ProductCategoryMutation.isPending}
+              disabled={isCreating}
               onClick={() => reset(form)}
             >
               Batal
             </Button>
           </DialogClose>
 
-          <Button
-            type="submit"
-            form="formisch-form"
-            disabled={ProductCategoryMutation.isPending}
-          >
+          <Button type="submit" form="formisch-form" disabled={isCreating}>
             Simpan
           </Button>
         </DialogFooter>

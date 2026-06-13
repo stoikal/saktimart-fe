@@ -8,17 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { env } from "@/lib/env"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Trash } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
-
-type ProductCategory = {
-  idProductCategory: string
-  name?: string
-  description?: string
-}
+import { useDeleteProductCategory } from "@/features/product-categories/hooks/useDeleteProductCategory"
+import type { ProductCategory } from "@/features/product-categories/types/product-category"
 
 type DeleteProductCategoryDialogProps = {
   productCategory: ProductCategory
@@ -27,38 +21,21 @@ type DeleteProductCategoryDialogProps = {
 export default function DeleteProductCategoryDialog(
   props: DeleteProductCategoryDialogProps
 ) {
-  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
-  const ProductCategoryMutation = useMutation({
-    mutationFn: async (idProductCategory: string) => {
-      const response = await fetch(
-        env.API_BASE_URL + "/api/product-categories/" + idProductCategory,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.message)
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["product-categories"] })
-      setOpen(false)
-      toast.success("Berhasil menghapus kategori produk.")
-    },
-    onError: () => {
-      toast.error("Gagal menghapus kategori produk.")
-    },
-  })
+  const { mutate: deleteProductCategory, isPending: isDeleting } =
+    useDeleteProductCategory()
 
   const handleDelete = () => {
-    ProductCategoryMutation.mutate(props.productCategory.idProductCategory)
+    deleteProductCategory(props.productCategory.idProductCategory, {
+      onSuccess: () => {
+        setOpen(false)
+        toast.success("Berhasil menghapus kategori produk.")
+      },
+      onError: () => {
+        toast.error("Gagal menghapus kategori produk.")
+      },
+    })
   }
 
   return (
@@ -82,10 +59,7 @@ export default function DeleteProductCategoryDialog(
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              variant="secondary"
-              disabled={ProductCategoryMutation.isPending}
-            >
+            <Button variant="secondary" disabled={isDeleting}>
               Batal
             </Button>
           </DialogClose>
@@ -93,7 +67,7 @@ export default function DeleteProductCategoryDialog(
           <Button
             variant="destructive"
             type="submit"
-            disabled={ProductCategoryMutation.isPending}
+            disabled={isDeleting}
             onClick={handleDelete}
           >
             Hapus
