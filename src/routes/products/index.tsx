@@ -1,46 +1,29 @@
 import { DataPagination } from "@/components/ui/data-pagination"
 import { DataTable } from "@/components/ui/data-table"
-import { env } from "@/lib/env"
+import { productQueries } from "@/features/products/queries"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import type { ColumnDef } from "@tanstack/table-core"
 import { useState } from "react"
-import CreateProductDialog from "./-components/CreateProductDialog"
-import DeleteProductDialog from "./-components/DeleteProductDialog"
+import CreateProductDialog from "../../features/products/components/CreateProductDialog"
+import DeleteProductDialog from "../../features/products/components/DeleteProductDialog"
+import type { Product } from "@/features/products/types/product"
 
 export const Route = createFileRoute("/products/")({
   component: RouteComponent,
 })
 
-type Product = {
-  idProduct: string
-  sku: string
-  name?: string
-  description?: string
-  barcode?: string
-}
-
 function RouteComponent() {
   const [page, setPage] = useState(1)
-  const pageSize = 10
+  const PAGE_SIZE = 10
 
-  const { data: products } = useQuery({
-    queryKey: ["products", { page, pageSize }],
-    queryFn: async () => {
-      const query = new URLSearchParams({
-        page: String(page),
-        size: String(pageSize),
-      })
-      const response = await fetch(
-        `${env.API_BASE_URL}/api/products?${query.toString()}`
-      )
-      return response.json()
-    },
-  })
+  const { data: products } = useQuery(
+    productQueries.list({ page, pageSize: PAGE_SIZE })
+  )
 
   const data: Product[] = products?.data?.elements || []
   const totalElements = products?.data?.totalElements || 0
-  const totalPages = Math.ceil(totalElements / pageSize) || 1
+  const totalPages = Math.ceil(totalElements / PAGE_SIZE) || 1
 
   const columns: ColumnDef<Product>[] = [
     { header: "SKU", accessorKey: "sku" },
@@ -50,9 +33,7 @@ function RouteComponent() {
     {
       id: "aksi",
       header: "Aksi",
-      cell: ({ cell }) => (
-        <DeleteProductDialog product={cell.row.original} />
-      ),
+      cell: ({ cell }) => <DeleteProductDialog product={cell.row.original} />,
     },
   ]
 

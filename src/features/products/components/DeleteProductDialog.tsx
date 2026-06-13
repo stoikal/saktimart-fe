@@ -8,57 +8,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { env } from "@/lib/env"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { Trash } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
-
-type Product = {
-  idProduct: string
-  name?: string
-  description?: string
-}
+import { useDeleteProduct } from "../hooks/useDeleteProduct"
+import type { Product } from "../types/product"
 
 type DeleteProductDialogProps = {
   product: Product
 }
 
-export default function DeleteProductDialog(
-  props: DeleteProductDialogProps
-) {
+export default function DeleteProductDialog(props: DeleteProductDialogProps) {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
-  const deleteProductMutation = useMutation({
-    mutationFn: async (idProduct: string) => {
-      const response = await fetch(
-        env.API_BASE_URL + "/api/products/" + idProduct,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.message)
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
-      setOpen(false)
-      toast.success("Berhasil menghapus produk.")
-    },
-    onError: () => {
-      toast.error("Gagal menghapus produk.")
-    },
-  })
+  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct()
 
   const handleDelete = () => {
-    deleteProductMutation.mutate(props.product.idProduct)
+    deleteProduct(props.product.idProduct, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["products"] })
+        setOpen(false)
+        toast.success("Berhasil menghapus produk.")
+      },
+      onError: () => {
+        toast.error("Gagal menghapus produk.")
+      },
+    })
   }
 
   return (
@@ -82,10 +59,7 @@ export default function DeleteProductDialog(
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button
-              variant="secondary"
-              disabled={deleteProductMutation.isPending}
-            >
+            <Button variant="secondary" disabled={isDeleting}>
               Batal
             </Button>
           </DialogClose>
@@ -93,7 +67,7 @@ export default function DeleteProductDialog(
           <Button
             variant="destructive"
             type="submit"
-            disabled={deleteProductMutation.isPending}
+            disabled={isDeleting}
             onClick={handleDelete}
           >
             Hapus

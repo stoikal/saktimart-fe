@@ -36,26 +36,11 @@ import {
   useForm,
   type SubmitHandler,
 } from "@formisch/react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import * as v from "valibot"
+import { useQuery } from "@tanstack/react-query"
 import { X, Plus } from "lucide-react"
 import { toast } from "sonner"
-
-const FormSchema = v.object({
-  sku: v.pipe(
-    v.string(),
-    v.minLength(1, "SKU wajib diisi"),
-    v.maxLength(50, "Maksimal 50 karakter")
-  ),
-  name: v.pipe(
-    v.string(),
-    v.minLength(3, "Minimal 3 karakter"),
-    v.maxLength(100, "Maksimal 100 karakter")
-  ),
-  description: v.pipe(v.string()),
-  barcode: v.pipe(v.string()),
-  categories: v.array(v.string()),
-})
+import { CreateProductSChema } from "@/features/products/schemas"
+import { useCreateProduct } from "@/features/products/hooks/useCreateProduct"
 
 type Category = {
   idProductCategory: string
@@ -63,7 +48,6 @@ type Category = {
 }
 
 export default function CreateProductDialog() {
-  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
 
@@ -84,7 +68,7 @@ export default function CreateProductDialog() {
   const categories: Category[] = categoriesData?.data?.elements || []
 
   const form = useForm({
-    schema: FormSchema,
+    schema: CreateProductSChema,
     initialInput: {
       sku: "",
       name: "",
@@ -94,38 +78,19 @@ export default function CreateProductDialog() {
     },
   })
 
-  const productMutation = useMutation({
-    mutationFn: async (
-      values: Parameters<SubmitHandler<typeof FormSchema>>[0]
-    ) => {
-      const response = await fetch(env.API_BASE_URL + "/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      })
+  const { mutate: createProduct, isPending: isCreating } = useCreateProduct()
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message)
-      }
-
-      queryClient.invalidateQueries({ queryKey: ["products"] })
-    },
-    onSuccess: () => {
-      reset(form)
-      setSelectedCategoryId("")
-      setOpen(false)
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
-
-  const handleSubmit: SubmitHandler<typeof FormSchema> = (values) => {
-    productMutation.mutate(values)
+  const handleSubmit: SubmitHandler<typeof CreateProductSChema> = (values) => {
+    createProduct(values, {
+      onSuccess: () => {
+        reset(form)
+        setSelectedCategoryId("")
+        setOpen(false)
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    })
   }
 
   return (
@@ -304,7 +269,7 @@ export default function CreateProductDialog() {
           <DialogClose asChild>
             <Button
               variant="secondary"
-              disabled={productMutation.isPending}
+              disabled={isCreating}
               onClick={() => {
                 reset(form)
                 setSelectedCategoryId("")
@@ -314,11 +279,7 @@ export default function CreateProductDialog() {
             </Button>
           </DialogClose>
 
-          <Button
-            type="submit"
-            form="formisch-form"
-            disabled={productMutation.isPending}
-          >
+          <Button type="submit" form="formisch-form" disabled={isCreating}>
             Simpan
           </Button>
         </DialogFooter>
