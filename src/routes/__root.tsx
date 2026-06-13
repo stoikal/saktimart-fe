@@ -6,13 +6,16 @@ const RootLayout = () => (
   <>
     <div className="flex gap-2 p-2">
       <Link to="/" className="[&.active]:font-bold">
-        Beranda
+        Dasbor
       </Link>
       <Link to="/products" className="[&.active]:font-bold">
         Produk
       </Link>
       <Link to="/product-categories" className="[&.active]:font-bold">
-       Kategori Produk
+        Kategori Produk
+      </Link>
+      <Link to="/price-tiers" className="[&.active]:font-bold">
+        Tingkat Harga
       </Link>
     </div>
     <hr />

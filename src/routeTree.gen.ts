@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as ProductCategoriesIndexRouteImport } from './routes/product-categories/index'
+import { Route as PriceTiersIndexRouteImport } from './routes/price-tiers/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,33 +29,42 @@ const ProductCategoriesIndexRoute = ProductCategoriesIndexRouteImport.update({
   path: '/product-categories/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PriceTiersIndexRoute = PriceTiersIndexRouteImport.update({
+  id: '/price-tiers/',
+  path: '/price-tiers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/price-tiers/': typeof PriceTiersIndexRoute
   '/product-categories/': typeof ProductCategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/price-tiers': typeof PriceTiersIndexRoute
   '/product-categories': typeof ProductCategoriesIndexRoute
   '/products': typeof ProductsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/price-tiers/': typeof PriceTiersIndexRoute
   '/product-categories/': typeof ProductCategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/product-categories/' | '/products/'
+  fullPaths: '/' | '/price-tiers/' | '/product-categories/' | '/products/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/product-categories' | '/products'
-  id: '__root__' | '/' | '/product-categories/' | '/products/'
+  to: '/' | '/price-tiers' | '/product-categories' | '/products'
+  id: '__root__' | '/' | '/price-tiers/' | '/product-categories/' | '/products/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PriceTiersIndexRoute: typeof PriceTiersIndexRoute
   ProductCategoriesIndexRoute: typeof ProductCategoriesIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
@@ -82,11 +92,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductCategoriesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/price-tiers/': {
+      id: '/price-tiers/'
+      path: '/price-tiers'
+      fullPath: '/price-tiers/'
+      preLoaderRoute: typeof PriceTiersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PriceTiersIndexRoute: PriceTiersIndexRoute,
   ProductCategoriesIndexRoute: ProductCategoriesIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }

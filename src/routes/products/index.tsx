@@ -38,12 +38,12 @@ function RouteComponent() {
   ]
 
   return (
-    <div className="p-4">
-      <div className="mb-4 flex justify-end">
+    <div className="p-6">
+      <div className="mb-6 flex justify-end">
         <CreateProductDialog />
       </div>
 
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} className="mb-4" />
 
       <DataPagination
         currentPage={page}
