@@ -17,6 +17,9 @@ const RootLayout = () => (
       <Link to="/price-tiers" className="[&.active]:font-bold">
         Tingkat Harga
       </Link>
+      <Link to="/customers" className="[&.active]:font-bold">
+        Pelanggan
+      </Link>
     </div>
     <hr />
     <Outlet />
