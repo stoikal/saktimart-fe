@@ -16,6 +16,7 @@ import type { PriceTier } from "@/features/price-tiers/types/price-tier"
 
 type DeletePriceTierDialogProps = {
   priceTier: PriceTier
+  disabled?: boolean
 }
 
 export default function DeletePriceTierDialog(
@@ -41,7 +42,7 @@ export default function DeletePriceTierDialog(
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">
+        <Button variant="destructive" disabled={props.disabled}>
           <Trash />
         </Button>
       </DialogTrigger>
