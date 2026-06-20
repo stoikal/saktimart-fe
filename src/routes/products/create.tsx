@@ -292,7 +292,7 @@ function RouteComponent() {
 
               {priceTiers.length > 0 && (
                 <FieldGroup>
-                  <FieldLabel>Harga</FieldLabel>
+                  <FieldLabel>Harga Jual</FieldLabel>
                   <div className="flex flex-col gap-3">
                     {priceTiers.map((tier) => (
                       <Field key={tier.idPriceTier}>
