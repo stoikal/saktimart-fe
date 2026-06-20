@@ -9,6 +9,7 @@ import type { ColumnDef } from "@tanstack/table-core"
 import { Plus } from "lucide-react"
 import { useState } from "react"
 import DeleteProductDialog from "../../features/products/components/DeleteProductDialog"
+import PageBreadcrumb from "@/components/page-breadcrumb"
 
 export const Route = createFileRoute("/products/")({
   component: RouteComponent,
@@ -49,6 +50,8 @@ function RouteComponent() {
 
   return (
     <div className="p-6">
+      <PageBreadcrumb items={[{ title: "Produk" }]} />
+
       <div className="mb-6 flex items-center justify-between">
         <h1>Daftar Produk</h1>
 

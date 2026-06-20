@@ -35,6 +35,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import { ChevronLeft, X } from "lucide-react"
 import { toast } from "sonner"
 import { env } from "@/lib/env"
+import PageBreadcrumb from "@/components/page-breadcrumb"
 
 type Category = {
   idProductCategory: string
@@ -113,6 +114,9 @@ function RouteComponent() {
 
   return (
     <div className="p-6">
+      <PageBreadcrumb
+        items={[{ title: "Produk", to: "/products" }, { title: "Tambah" }]}
+      />
       <div className="mb-6 flex justify-end">
         <Button asChild variant="secondary">
           <Link to="/products">
