@@ -4,4 +4,8 @@ export type Product = {
   name?: string
   description?: string
   barcode?: string
+  categories: Array<{
+    idProductCategory: string
+    name: string
+  }>
 }

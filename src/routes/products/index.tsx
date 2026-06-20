@@ -28,8 +28,17 @@ function RouteComponent() {
 
   const columns: ColumnDef<Product>[] = [
     { header: "SKU", accessorKey: "sku" },
-    { header: "Name", accessorKey: "name" },
-    { header: "Description", accessorKey: "description" },
+    { header: "Nama", accessorKey: "name" },
+    { header: "Deskripsi", accessorKey: "description" },
+    {
+      header: "Kategori",
+      accessorKey: "categories",
+      cell: ({ cell }) => {
+        const categories = cell.row.original.categories
+
+        return categories.map((category) => category.name).join(", ")
+      },
+    },
     { header: "Barcode", accessorKey: "barcode" },
     {
       id: "aksi",
@@ -40,9 +49,14 @@ function RouteComponent() {
 
   return (
     <div className="p-6">
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex items-center justify-between">
+        <h1>Daftar Produk</h1>
+
         <Button asChild>
-          <Link to="/products/create"><Plus />Tambah</Link>
+          <Link to="/products/create">
+            <Plus />
+            Tambah
+          </Link>
         </Button>
       </div>
 
