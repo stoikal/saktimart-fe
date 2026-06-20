@@ -41,7 +41,9 @@ import { useQuery } from "@tanstack/react-query"
 export default function CreateCustomerDialog() {
   const [open, setOpen] = useState(false)
 
-  const { data: priceTiers } = useQuery(priceTierQueries.list())
+  const { data: priceTiers } = useQuery(
+    priceTierQueries.list({ isEnabled: true })
+  )
 
   const form = useForm({
     schema: CreateCustomerSchema,

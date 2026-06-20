@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as ProductCategoriesIndexRouteImport } from './routes/product-categories/index'
 import { Route as PriceTiersIndexRouteImport } from './routes/price-tiers/index'
+import { Route as PosIndexRouteImport } from './routes/pos/index'
 import { Route as CustomersIndexRouteImport } from './routes/customers/index'
 import { Route as ProductsCreateRouteImport } from './routes/products/create'
 
@@ -36,6 +37,11 @@ const PriceTiersIndexRoute = PriceTiersIndexRouteImport.update({
   path: '/price-tiers/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PosIndexRoute = PosIndexRouteImport.update({
+  id: '/pos/',
+  path: '/pos/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomersIndexRoute = CustomersIndexRouteImport.update({
   id: '/customers/',
   path: '/customers/',
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products/create': typeof ProductsCreateRoute
   '/customers/': typeof CustomersIndexRoute
+  '/pos/': typeof PosIndexRoute
   '/price-tiers/': typeof PriceTiersIndexRoute
   '/product-categories/': typeof ProductCategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/products/create': typeof ProductsCreateRoute
   '/customers': typeof CustomersIndexRoute
+  '/pos': typeof PosIndexRoute
   '/price-tiers': typeof PriceTiersIndexRoute
   '/product-categories': typeof ProductCategoriesIndexRoute
   '/products': typeof ProductsIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/products/create': typeof ProductsCreateRoute
   '/customers/': typeof CustomersIndexRoute
+  '/pos/': typeof PosIndexRoute
   '/price-tiers/': typeof PriceTiersIndexRoute
   '/product-categories/': typeof ProductCategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/products/create'
     | '/customers/'
+    | '/pos/'
     | '/price-tiers/'
     | '/product-categories/'
     | '/products/'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/products/create'
     | '/customers'
+    | '/pos'
     | '/price-tiers'
     | '/product-categories'
     | '/products'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/products/create'
     | '/customers/'
+    | '/pos/'
     | '/price-tiers/'
     | '/product-categories/'
     | '/products/'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductsCreateRoute: typeof ProductsCreateRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
+  PosIndexRoute: typeof PosIndexRoute
   PriceTiersIndexRoute: typeof PriceTiersIndexRoute
   ProductCategoriesIndexRoute: typeof ProductCategoriesIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PriceTiersIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pos/': {
+      id: '/pos/'
+      path: '/pos'
+      fullPath: '/pos/'
+      preLoaderRoute: typeof PosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customers/': {
       id: '/customers/'
       path: '/customers'
@@ -159,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductsCreateRoute: ProductsCreateRoute,
   CustomersIndexRoute: CustomersIndexRoute,
+  PosIndexRoute: PosIndexRoute,
   PriceTiersIndexRoute: PriceTiersIndexRoute,
   ProductCategoriesIndexRoute: ProductCategoriesIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
