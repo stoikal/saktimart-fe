@@ -13,10 +13,16 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { useDeletePriceTier } from "@/features/price-tiers/hooks/useDeletePriceTier"
 import type { PriceTier } from "@/features/price-tiers/types/price-tier"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type DeletePriceTierDialogProps = {
   priceTier: PriceTier
   disabled?: boolean
+  tooltip?: string
 }
 
 export default function DeletePriceTierDialog(
@@ -41,11 +47,16 @@ export default function DeletePriceTierDialog(
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="destructive" disabled={props.disabled}>
-          <Trash />
-        </Button>
-      </DialogTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button variant="destructive" disabled={props.disabled}>
+              <Trash />
+            </Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>{props.tooltip}</TooltipContent>
+      </Tooltip>
 
       <DialogContent
         showCloseButton={false}

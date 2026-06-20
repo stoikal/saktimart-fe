@@ -3,4 +3,6 @@ export type PriceTier = {
   name?: string
   description?: string
   sortOrder?: number
+  isEnabled?: boolean
+  isDefault?: boolean
 }

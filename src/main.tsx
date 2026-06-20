@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./index.css"
 
 import { routeTree } from "./routeTree.gen"
+import { TooltipProvider } from "./components/ui/tooltip"
 
 const router = createRouter({ routeTree })
 const queryClient = new QueryClient()
@@ -25,9 +26,11 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <ThemeProvider>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
+        <TooltipProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </TooltipProvider>
       </ThemeProvider>
     </StrictMode>
   )
