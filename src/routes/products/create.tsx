@@ -73,7 +73,7 @@ function RouteComponent() {
     priceTierQueries.list({ isEnabled: true })
   )
 
-  const categories: Category[] = categoriesData?.data?.elements || []
+  const categories: Category[] = categoriesData?.data?.items || []
   const priceTiers: PriceTier[] = priceTiersData?.data || []
 
   const form = useForm({

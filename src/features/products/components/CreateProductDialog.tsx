@@ -65,7 +65,7 @@ export default function CreateProductDialog() {
     },
   })
 
-  const categories: Category[] = categoriesData?.data?.elements || []
+  const categories: Category[] = categoriesData?.data?.items || []
 
   const form = useForm({
     schema: CreateProductSChema,

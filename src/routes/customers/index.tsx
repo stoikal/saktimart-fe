@@ -21,7 +21,7 @@ function RouteComponent() {
     customerQueries.list(page, pageSize)
   )
 
-  const data: Customer[] = customers?.data?.elements || []
+  const data: Customer[] = customers?.data?.items || []
   const totalPages = customers?.data?.totalPages || 1
 
   const columns: ColumnDef<Customer>[] = [

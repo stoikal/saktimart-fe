@@ -21,7 +21,7 @@ function RouteComponent() {
     productCategoryQueries.list({ page, pageSize })
   )
 
-  const data: ProductCategory[] = productCategories?.data?.elements || []
+  const data: ProductCategory[] = productCategories?.data?.items || []
   const totalPages = productCategories?.data?.totalPages || 1
 
   const columns: ColumnDef<ProductCategory>[] = [

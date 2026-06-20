@@ -23,9 +23,9 @@ function RouteComponent() {
     productQueries.list({ page, pageSize: PAGE_SIZE })
   )
 
-  const data: Product[] = products?.data?.elements || []
-  const totalElements = products?.data?.totalElements || 0
-  const totalPages = Math.ceil(totalElements / PAGE_SIZE) || 1
+  const data: Product[] = products?.data?.items || []
+  const totalItems = products?.data?.totalItems || 0
+  const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1
 
   const columns: ColumnDef<Product>[] = [
     { header: "SKU", accessorKey: "sku" },
