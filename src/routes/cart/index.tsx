@@ -1,16 +1,14 @@
-import { Card, CardContent } from '@/components/ui/card'
+import PosSale from '@/features/cart/components/Cart'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/pos/')({
+export const Route = createFileRoute('/cart/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
   return (
     <div className="p-6">
-      <Card>
-        <CardContent>Hello</CardContent>
-      </Card>
+      <PosSale />
     </div>
   )
 }

@@ -8,7 +8,7 @@ const RootLayout = () => (
       <Link to="/" className="[&.active]:font-bold">
         Dasbor
       </Link>
-      <Link to="/pos" className="[&.active]:font-bold">
+      <Link to="/cart" className="[&.active]:font-bold">
         Kasa
       </Link>
       <Link to="/products" className="[&.active]:font-bold">
