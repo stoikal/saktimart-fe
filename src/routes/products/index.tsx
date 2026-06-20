@@ -1,13 +1,14 @@
+import { Button } from "@/components/ui/button"
 import { DataPagination } from "@/components/ui/data-pagination"
 import { DataTable } from "@/components/ui/data-table"
 import { productQueries } from "@/features/products/queries"
-import { useQuery } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
-import type { ColumnDef } from "@tanstack/table-core"
-import { useState } from "react"
-import CreateProductDialog from "../../features/products/components/CreateProductDialog"
-import DeleteProductDialog from "../../features/products/components/DeleteProductDialog"
 import type { Product } from "@/features/products/types/product"
+import { useQuery } from "@tanstack/react-query"
+import { createFileRoute, Link } from "@tanstack/react-router"
+import type { ColumnDef } from "@tanstack/table-core"
+import { Plus } from "lucide-react"
+import { useState } from "react"
+import DeleteProductDialog from "../../features/products/components/DeleteProductDialog"
 
 export const Route = createFileRoute("/products/")({
   component: RouteComponent,
@@ -40,7 +41,9 @@ function RouteComponent() {
   return (
     <div className="p-6">
       <div className="mb-6 flex justify-end">
-        <CreateProductDialog />
+        <Button asChild>
+          <Link to="/products/create"><Plus />Tambah</Link>
+        </Button>
       </div>
 
       <DataTable columns={columns} data={data} className="mb-4" />

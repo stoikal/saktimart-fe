@@ -3,6 +3,22 @@
 This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
 Was bootstrapped using `bunx --bun shadcn@4.8.0 init --preset b3wo8ckMc4 --template vite`
 
+## Installation
+
+Install dependencies with bun:
+
+```bash
+bun install
+```
+
+## Development
+
+Run the development server with bun:
+
+```bash
+bun dev
+```
+
 ## Adding components
 
 To add components to your app, run the following command:
